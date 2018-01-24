@@ -3,15 +3,15 @@ package pessoal;
 public class Pessoal {
 	
 	private Integer id;
-	private String siape;
+	private Integer siape;
 	private Integer idPessoa;
 	private String nome;
-	private String matriculaInterna;
+	private Integer matriculaInterna;
 	private String nomeIdentificacao;
 	private String dataNascimento;
 	private String sexo;
 	
-    public Pessoal(Integer id, String siape, Integer idPessoa, String nome, String matriculaInterna
+    public Pessoal(Integer id, Integer siape, Integer idPessoa, String nome, Integer matriculaInterna
     		, String nomeIdentificacao, String dataNascimento, String sexo) {
         this.id = id;
         this.siape = siape;
@@ -31,10 +31,10 @@ public class Pessoal {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getSiape() {
+	public Integer getSiape() {
 		return siape;
 	}
-	public void setSiape(String siape) {
+	public void setSiape(Integer siape) {
 		this.siape = siape;
 	}
 	public Integer getIdPessoa() {
@@ -49,10 +49,10 @@ public class Pessoal {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public String getMatriculaInterna() {
+	public Integer getMatriculaInterna() {
 		return matriculaInterna;
 	}
-	public void setMatriculaInterna(String matriculaInterna) {
+	public void setMatriculaInterna(Integer matriculaInterna) {
 		this.matriculaInterna = matriculaInterna;
 	}
 	public String getNomeIdentificacao() {
