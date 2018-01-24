@@ -77,7 +77,7 @@ public class PessoalController {
 		}
         PessoalDAO dao = new PessoalDAO();
         dao.insertPessoa(pessoal);
-        return new ResponseEntity<>(200, HttpStatus.OK);
+        return new ResponseEntity<>(201, HttpStatus.OK );
     	//return new ResponseEntity<Pessoal>(pessoal, HttpStatus.OK); retorna o objeto criado
     }
 
