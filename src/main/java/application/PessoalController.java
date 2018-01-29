@@ -57,14 +57,14 @@ public class PessoalController {
         	matches = false;
         }
         regex = "^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$";
-        if(!Pattern.matches(regex, pessoal.getNome())){
+        if((!Pattern.matches(regex, pessoal.getNome()))||(pessoal.getNome().length()>100)){
         	m.add(" [nome] failed to match API requirements. "
-        			+ "It should look like this: Firstname Middlename(optional) Lastname");
+        			+ "It should look like this: Firstname Middlename(optional) Lastname and size 100 characteres");
         	matches = false;
         }
-        if(!Pattern.matches(regex, pessoal.getNomeIdentificacao())){
+        if((!Pattern.matches(regex, pessoal.getNomeIdentificacao()))||(pessoal.getNomeIdentificacao().length()>100)){
         	m.add("[nome_identificacao] failed to match API requirements. "
-        			+ "It should look like this: Firstname Middlename(optional) Lastname");
+        			+ "It should look like this: Firstname Middlename(optional) Lastname and size 100 characteres");
         	matches = false;
         }
         regex = "\\b[MF]{1}\\b";
