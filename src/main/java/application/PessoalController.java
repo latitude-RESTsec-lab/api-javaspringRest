@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -25,41 +26,51 @@ import pessoal.PessoalDAO;
 public class PessoalController {
 
     @RequestMapping("/api/servidores")
-    public List<Pessoal> listaPessoal(){
+    public ResponseEntity listaPessoal(){
     	PessoalDAO dao = new PessoalDAO();
-    	return dao.getPessoal();
+    	List<Pessoal> l = dao.getPessoal();
+    	if(l==null) {
+    		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    	}else {
+    	return new ResponseEntity<List<Pessoal>> (l, HttpStatus.OK);
+    	}
     }
     @RequestMapping("/api/servidor/{matriculaInterna}")
-    public Pessoal servidor(@PathVariable("matriculaInterna") Integer matriculaInterna) {
+    @SuppressWarnings("unchecked")
+    public ResponseEntity servidor(@PathVariable("matriculaInterna") Integer matriculaInterna) {
     	PessoalDAO dao = new PessoalDAO();
-    	return dao.getPessoa(matriculaInterna);
+		ResponseEntity<Pessoal> p = dao.getPessoa(matriculaInterna);
+		if(p.getBody().getMatriculaInterna()==null) {
+			System.out.println("entrou no nulo");
+		}
+    	return p;
     	
     }
     @RequestMapping(value="/api/servidor/", method=RequestMethod.POST)
     public ResponseEntity post(@RequestBody Pessoal pessoal) {
     	String regex = ("^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)$");
-    	String m = "";
+    	List<String> m = new ArrayList<>();
     	boolean matches = true;
         if(!Pattern.matches(regex, pessoal.getDataNascimento())){
-        	m = "[data_nascimento] failed to match API requirements."+
-        "It should look like this: 1969-02-12T00:00:00Z";
+        	m.add("[data_nascimento] failed to match API requirements."+
+        "It should look like this: 1969-02-12T00:00:00Z");
         	matches = false;
         }
         regex = "^([A-Z][a-z]+([ ]?[a-z]?['-]?[A-Z][a-z]+)*)$";
         if(!Pattern.matches(regex, pessoal.getNome())){
-        	m = m+" [nome] failed to match API requirements. "
-        			+ "It should look like this: Firstname Middlename(optional) Lastname";
+        	m.add(" [nome] failed to match API requirements. "
+        			+ "It should look like this: Firstname Middlename(optional) Lastname");
         	matches = false;
         }
         if(!Pattern.matches(regex, pessoal.getNomeIdentificacao())){
-        	m = m + "[nome_identificacao] failed to match API requirements. "
-        			+ "It should look like this: Firstname Middlename(optional) Lastname";
+        	m.add("[nome_identificacao] failed to match API requirements. "
+        			+ "It should look like this: Firstname Middlename(optional) Lastname");
         	matches = false;
         }
         regex = "\\b[MF]{1}\\b";
         if(!Pattern.matches(regex, pessoal.getSexo())){
-        	m = m + "[sexo] failed to match API requirements."
-        			+ " It should look like this: M for male, F for female";
+        	m.add("[sexo] failed to match API requirements."
+        			+ " It should look like this: M for male, F for female");
         	matches = false;
         }
         if(!matches){
@@ -74,10 +85,15 @@ public class PessoalController {
 			pessoal.setMatriculaInterna(hash.intValue());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
         PessoalDAO dao = new PessoalDAO();
-        dao.insertPessoa(pessoal);
-        return new ResponseEntity<>(200, HttpStatus.OK);
+        if(dao.insertPessoa(pessoal).getStatusCode().is2xxSuccessful()) {
+        	return new ResponseEntity<Integer>(pessoal.getMatriculaInterna(), HttpStatus.OK);
+        }else {
+        	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
     	//return new ResponseEntity<Pessoal>(pessoal, HttpStatus.OK); retorna o objeto criado
     }
 

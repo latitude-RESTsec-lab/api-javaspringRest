@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class PessoalDAO {
 	
 	public List<Pessoal> getPessoal() {
@@ -37,10 +40,11 @@ public class PessoalDAO {
 			con.close();
 		} catch (Exception e) {
 			e.getMessage();
+			return null;
 		}
 		return listaPessoal;
 	}
-	public Pessoal getPessoa(Integer matriculaInterna) {
+	public ResponseEntity getPessoa(Integer matriculaInterna) {
 		Pessoal p = new Pessoal();
 		try {
 			Connection con = DriverManager.getConnection("jdbc:postgresql://10.30.0.10:5432/administrativo",
@@ -64,10 +68,15 @@ public class PessoalDAO {
 			con.close();
 		} catch (Exception e) {
 			e.getMessage();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return p;
+		if(p==null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<Pessoal> (p, HttpStatus.OK);
+		}
 	}
-	public String insertPessoa(Pessoal pessoal){
+	public ResponseEntity insertPessoa(Pessoal pessoal){
 		Connection con = null;
 		//PreparedStatement st = null;
 		Statement st = null;
@@ -81,7 +90,7 @@ public class PessoalDAO {
 			st=con.createStatement();			
 			st.executeUpdate(sql);
 		}catch(Exception e){
-
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}finally {
 
             try {
@@ -91,11 +100,11 @@ public class PessoalDAO {
                 if (con != null) {
                     con.close();
 				}
-				return "200";
+				return new ResponseEntity<>(HttpStatus.CREATED);
 
             } catch (Exception ex) {
-				return "400";
-            }
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);           
+				}
 
 		}
 	}
