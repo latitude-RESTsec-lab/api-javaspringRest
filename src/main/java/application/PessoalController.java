@@ -93,7 +93,6 @@ public class PessoalController {
         }else {
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
     	//return new ResponseEntity<Pessoal>(pessoal, HttpStatus.OK); retorna o objeto criado
     }
 
