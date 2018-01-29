@@ -89,7 +89,7 @@ public class PessoalController {
 		}
         PessoalDAO dao = new PessoalDAO();
         if(dao.insertPessoa(pessoal).getStatusCode().is2xxSuccessful()) {
-        	return new ResponseEntity<Integer>(pessoal.getMatriculaInterna(), HttpStatus.OK);
+        	return new ResponseEntity<Integer>(pessoal.getMatriculaInterna(), HttpStatus.CREATED);
         }else {
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
