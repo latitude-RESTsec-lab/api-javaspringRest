@@ -1,5 +1,6 @@
 package application;
 
+import java.io.BufferedReader;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +12,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.eclipse.jetty.http.HttpScheme;
+import org.eclipse.jetty.server.Request;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +54,7 @@ public class PessoalController {
     	
     }
     @RequestMapping(value="/api/servidor/", method=RequestMethod.POST)
-    public ResponseEntity post(@RequestBody Pessoal pessoal) {
+    public ResponseEntity post(@RequestBody Pessoal pessoal, HttpServletRequest request) {
     	String regex = ("^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)$");
     	List<String> m = new ArrayList<>();
     	boolean matches = true;
@@ -101,7 +107,11 @@ public class PessoalController {
 		}
         PessoalDAO dao = new PessoalDAO();
         if(dao.insertPessoa(pessoal).getStatusCode().is2xxSuccessful()) {
-        	return new ResponseEntity<Integer>(pessoal.getMatriculaInterna(), HttpStatus.CREATED);
+        	HttpHeaders headers = new HttpHeaders();
+        	StringBuffer requestURL = request.getRequestURL();
+        	headers.add(HttpHeaders.LOCATION , requestURL.toString()+pessoal.getMatriculaInterna());
+        	return new ResponseEntity<Integer>(headers, HttpStatus.CREATED);
+//        	return  ;
         }else {
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -70,7 +70,7 @@ public class PessoalDAO {
 			e.getMessage();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if(p==null) {
+		if(p.getId()==null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
 			return new ResponseEntity<Pessoal> (p, HttpStatus.OK);
