@@ -18,8 +18,8 @@ public class PessoalDAO {
 	public List<Pessoal> getPessoal() {
 		List<Pessoal> listaPessoal = new ArrayList<>();
 		try {
-			Connection con = DriverManager.getConnection("jdbc:postgresql://10.30.0.10:5432/administrativo",
-					"sipac", "1qaz2wsxsipac");
+			Connection con = DriverManager.getConnection("jdbc:postgresql://host:port/db",
+					"user", "password");
 			ResultSet rs = con.createStatement().executeQuery("select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao," + 
 					"		p.nome, p.data_nascimento, p.sexo from rh.servidor s" + 
 					"	inner join comum.pessoa p on s.id_pessoa = p.id_pessoa ");
@@ -47,8 +47,8 @@ public class PessoalDAO {
 	public ResponseEntity getPessoa(Integer matriculaInterna) {
 		Pessoal p = new Pessoal();
 		try {
-			Connection con = DriverManager.getConnection("jdbc:postgresql://10.30.0.10:5432/administrativo",
-					"sipac", "1qaz2wsxsipac");
+			Connection con = DriverManager.getConnection("jdbc:postgresql://host:port/db",
+					"user", "password");
 			PreparedStatement st = con.prepareStatement("select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao," + 
 					"		p.nome, p.data_nascimento, p.sexo from rh.servidor s" + 
 					"	inner join comum.pessoa p on s.id_pessoa = p.id_pessoa where s.matricula_interna = ?");
@@ -81,8 +81,8 @@ public class PessoalDAO {
 		//PreparedStatement st = null;
 		Statement st = null;
 		try{
-			con = DriverManager.getConnection("jdbc:postgresql://10.30.0.10:5432/administrativo",
-					"sipac", "1qaz2wsxsipac");
+			con = DriverManager.getConnection("jdbc:postgresql://host:port/db",
+					"user", "password");
 			String sql = "INSERT INTO rh.servidor_tmp(id_servidor, siape, id_pessoa, matricula_interna,"
 					+ " id_foto, nome_identificacao,nome, data_nascimento, sexo)"
 					+ " VALUES ("+pessoal.getId()+", "+pessoal.getSiape()+", "+pessoal.getIdPessoa()+", "+pessoal.getMatriculaInterna()+
