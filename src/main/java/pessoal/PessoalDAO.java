@@ -51,7 +51,7 @@ public class PessoalDAO {
 					"user", "password");
 			PreparedStatement st = con.prepareStatement("select s.id_servidor, s.siape, s.id_pessoa, s.matricula_interna, s.nome_identificacao," + 
 					"		p.nome, p.data_nascimento, p.sexo from rh.servidor s" + 
-					"	inner join comum.pessoa p on s.id_pessoa = p.id_pessoa where s.matricula_interna = ?");
+					"	inner join comum.pessoa p on s.id_pessoa = p.id_pessoa where s.siape = ?");
 			st.setInt(1, matriculaInterna);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()) {
